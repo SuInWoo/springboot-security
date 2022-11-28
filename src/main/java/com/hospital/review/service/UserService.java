@@ -20,7 +20,9 @@ public class UserService {
         // 중복이면 회원가입 x --> Exception(예외)발생
         // 있으면 에러 처리
         userRepo.findByUserName(userJoinReq.getUserName())
-                .ifPresent(user -> new RuntimeException("해당 UserName 중복"));
+                .ifPresent(user -> {
+                    throw new RuntimeException("해당 UserName 중복");
+                });
 
         // 회원가입 .save()
         User savedUser = userRepo.save(userJoinReq.toEntity());

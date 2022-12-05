@@ -17,6 +17,10 @@ public class JwtTokenUtil {
         return expiredDate.before(new Date()); // 현재보다 이전인지 check를 합니다.
     }
 
+    public static String getUserName(String token, String key) {
+        return extractClaims(token, key).get("userName").toString();
+    }
+
     public static String createToken(String userName, String key, long expireTimeMs) {
         Claims claims = Jwts.claims();  // 일종의 map
         claims.put("userName", userName);

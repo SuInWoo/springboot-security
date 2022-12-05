@@ -1,5 +1,6 @@
 package com.hospital.review.config;
 
+import com.hospital.review.domain.entity.User;
 import com.hospital.review.service.UserService;
 import com.hospital.review.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -59,12 +60,20 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 문열어주기
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken("", null,
-                        List.of(new SimpleGrantedAuthority("USER"))    );
+        // Token에서 Claim에서 UserName꺼내기
+        String userName = JwtTokenUtil.getUserName(token, secretKey);
+        log.info("userName:{}", userName);
+
+// UserDetail가져오기
+        User user = userService.getUserByUserName(userName);
+        log.info("userRole:{}", user.getRole());
+
+        //문 열어주기, Role 바인딩
+        UsernamePasswordAuthenticationToken authenticationToken = new
+                UsernamePasswordAuthenticationToken(user.getUserName(), null,
+                List.of(new SimpleGrantedAuthority(user.getRole().name())));
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);  // 권한 부여
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken); // 권한 부여
         filterChain.doFilter(request, response);
     }
 }

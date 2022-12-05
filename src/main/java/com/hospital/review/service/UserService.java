@@ -59,4 +59,10 @@ public class UserService {
         // 두 가지 확인이 pass면 Token 발행
         return JwtTokenUtil.createToken(userName, secretKey, 1000 * 60 * 60);   // 1시간 짜리 토큰
     }
+
+    public User getUserByUserName(String userName) {
+        return userRepo.findByUserName(userName)
+                .orElseThrow(() -> new HospitalReviewAppException(ErrorCode.NOT_FOUND, ""));
+    }
+
 }

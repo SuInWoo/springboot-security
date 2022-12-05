@@ -57,6 +57,6 @@ public class UserService {
         }
 
         // 두 가지 확인이 pass면 Token 발행
-        return JwtTokenUtil.createToken(userName, secretKey, 1000 * 60 * 60);
+        return JwtTokenUtil.createToken(userName, secretKey, 1000 * 60 * 60);   // 1시간 짜리 토큰
     }
 }
